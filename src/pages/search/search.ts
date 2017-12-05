@@ -54,7 +54,7 @@ export class SearchPage {
   }
   load(query:string){ 
     this.q = " +"+this.searchBy+":"+query;
-    this.lib.getBooks(this.q.toLowerCase(),this.startIndex,10).then(data=>{
+    this.lib.getMovies(this.q.toLowerCase(),this.startIndex,10).then(data=>{
       this.results = data['items'];
     }).catch(err=>{
       console.log(err);
@@ -65,7 +65,7 @@ export class SearchPage {
   }
   doInfinite(infiniteScroll){
     this.startIndex = this.results.length;
-    this.lib.getBooks(this.q.toLowerCase(),this.startIndex,10).then(data=>{
+    this.lib.getMovies(this.q.toLowerCase(),this.startIndex,10).then(data=>{
       this.results = this.results.concat(data['items']);
       console.log(this.results);
       infiniteScroll.complete();

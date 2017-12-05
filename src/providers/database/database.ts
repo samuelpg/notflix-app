@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Storage } from '@ionic/storage';
+import { resolveDefinition } from '@angular/core/src/view/util';
 /*
   Generated class for the DatabaseProvider provider.
 
@@ -53,5 +54,75 @@ export class DatabaseProvider {
         
       })
     });
+  }
+  registerUser(username:string, password:string, email: string){
+    return new Promise(resolve=>{
+      this.storage.get("user_"+username).then(data=>{
+        if(data==null){
+          let user = {
+            username:username,
+            password:password,
+            email:email,
+          }
+          this.storage.set("user_"+username, user).then(data=>{
+            this.openSession(username);
+            resolve({status:true});
+          }).catch(data=>{
+            resolve({status:false});
+          })
+        }else{
+          resolve({status:false});
+        }
+      }).catch(data=>{
+        resolve({status:false});
+      })
+    })
+  }
+
+  login(username:string, password:string){
+    console.log("ASD")
+    return new Promise(resolve=>{
+      this.storage.get("user_"+username).then(data=>{
+        console.log(data)
+        if(data!=null){
+          if(data['password']==password){
+            this.openSession(username);
+            resolve({status:true});
+          }else{
+            resolve({status:false});
+          }
+        }else{
+          resolve({status:false})
+        }
+      }).catch(data=>{
+        resolve({status:false});
+      })
+    })
+  }
+
+  openSession(username:string){
+    this.storage.set("current_session",{username:username})
+  }
+  currentSession(op:string){
+    switch(op){
+      case "check":{
+        return new Promise(resolve=>{
+          this.storage.get("current_session").then(data=>{
+            if(data!=null){
+              resolve({status:true, username: data["username"]});
+            }else{
+              resolve({status:false});
+            }
+          })
+        })
+      }
+      case "close":{
+        return new Promise(resolve=>{
+          this.storage.remove("current_session").then(data=>{
+            resolve("ok")
+          })
+        })
+      }
+    }
   }
 }

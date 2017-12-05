@@ -8,6 +8,9 @@ import { ContactPage } from '../pages/contact/contact';
 import { HomePage } from '../pages/home/home';
 import { TabsPage } from '../pages/tabs/tabs';
 import { BookPage } from '../pages/book/book';
+import { LoginPage } from '../pages/login/login';
+import { RegisterPage } from '../pages/register/register';
+
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { LibProvider } from '../providers/lib/lib';
@@ -28,7 +31,9 @@ import { SearchPopOver } from '../pages/pop-over/searchPopOver';
     BookPage,
     CategoryPage,
     SearchPage,
-    SearchPopOver
+    SearchPopOver,
+    RegisterPage,
+    LoginPage
   ],
   imports: [
     BrowserModule,
@@ -46,7 +51,9 @@ import { SearchPopOver } from '../pages/pop-over/searchPopOver';
     BookPage,
     CategoryPage,
     SearchPage,
-    SearchPopOver
+    SearchPopOver,
+    RegisterPage,
+    LoginPage
   ],
   providers: [
     StatusBar,

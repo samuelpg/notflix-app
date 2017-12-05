@@ -5,11 +5,9 @@
   Ionic pages and navigation.
 -->
 <ion-header>
-
   <ion-navbar>
-    <ion-title>{{category}}</ion-title>
+    <ion-title>{{category.title}}</ion-title>
   </ion-navbar>
-  <ion-searchbar (ionInput)="getItems($event)"></ion-searchbar>
 </ion-header>
 
 
@@ -18,13 +16,13 @@
       <ion-card *ngIf="result!=null">
           <ion-grid>
               <ion-row>
-                <img col-4 *ngIf="result.volumeInfo.imageLinks!==undefined" class="book-thumbnail" [src]="result.volumeInfo.imageLinks.thumbnail"/>
-                <img col-4 *ngIf="result.volumeInfo.imageLinks===undefined" class="book-thumbnail" src="../assets/imgs/image-not-available.jpg"/>
+                <img col-4 *ngIf="result.poster_path!==undefined" class="book-thumbnail" [src]="posterPath(result.poster_path)"/>
+                <img col-4 *ngIf="result.poster_path===undefined" class="book-thumbnail" src="../assets/imgs/image-not-available.jpg"/>
                 <div col-8>
-                  <h4>{{result.volumeInfo.title}}</h4>
-                  <p>{{result.volumeInfo.authors}}</p>
-                  <p>{{result.volumeInfo.publishedDate}}</p>
-                  <button ion-button round end outline (click)="seeMore(result)" (color)="primary">See More<ion-icon name="arrow-dropright"></ion-icon></button>
+                  <h4>{{result.original_title}}</h4>
+                  <p><ion-icon name="star"></ion-icon> {{result.vote_average}}</p>
+                  <p>{{result.release_date}}</p>
+                  <button ion-button round end outline (click)="seeMore(result.id)" (color)="primary">See More<ion-icon name="arrow-dropright"></ion-icon></button>
                 </div>
               </ion-row>
             </ion-grid>

@@ -3,12 +3,6 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { LibProvider } from '../../providers/lib/lib';
 import { BookPage } from '../book/book';
 import { LoadingController } from 'ionic-angular';
-/**
- * Generated class for the CategoryPage page.
- *
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
- */
 
 @IonicPage()
 @Component({
@@ -16,20 +10,23 @@ import { LoadingController } from 'ionic-angular';
   templateUrl: 'category.html',
 })
 export class CategoryPage {
-  category : string;
+  category : any;
   results : Array<Object>;
-  q : string = " ";
-  startIndex : number = 0;
-  constructor(public navCtrl: NavController, public navParams: NavParams,public lib: LibProvider,public loadingCtrl:LoadingController) {
+  startIndex : number = 1;
+  constructor(
+    public navCtrl: NavController, 
+    public navParams: NavParams,
+    public lib: LibProvider,
+    public loadingCtrl:LoadingController
+    ) {
       this.category = navParams.data['category'];
-      this.startIndex = 0;
-      this.q = " ";
+      this.startIndex = 1;
       let loading = this.loadingCtrl.create({
-        content: "Getting more books!...",
+        content: "Getting more Movies!...",
       });
       loading.present();
-      this.lib.getBooksByCategory(this.q,this.category,this.startIndex).then(data=>{
-        this.results = data['items'];
+      this.lib.getMoviesByCategory(this.category.query,this.startIndex).then(data=>{
+        this.results = data['results'];
         loading.dismiss();
       }).catch(err=>{
         console.log(err);
@@ -38,27 +35,22 @@ export class CategoryPage {
   ionViewDidLoad() {
     console.log('ionViewDidLoad CategoryPage');
   }
-  getItems(ev: any){
-    this.q = ev.target.value;
-    this.results = new Array();
-    this.startIndex = 0;
-    this.lib.getBooksByCategory(this.q.toLowerCase(),this.category,this.startIndex).then(data=>{
-      this.results = data['items'];
-    }).catch(err=>{
-      console.log(err);
-    })
-  }
-  seeMore(item:Object){
-    this.navCtrl.push(BookPage, item);
+
+  seeMore(id:string){
+    console.log(id)
+    this.navCtrl.push(BookPage,{id:id});
   }
   doInfinite(infiniteScroll){
-    this.startIndex = this.results.length;
-    this.lib.getBooksByCategory(this.q.toLowerCase(),this.category,this.startIndex).then(data=>{
-      this.results = this.results.concat(data['items']);
+    this.startIndex += 1;
+    this.lib.getMoviesByCategory(this.category.query,this.startIndex).then(data=>{
+      this.results = this.results.concat(data['results']);
       console.log(this.results);
       infiniteScroll.complete();
     }).catch(err=>{
       console.log(err);
     })
+  }
+  posterPath(pp:string){
+    return "https://image.tmdb.org/t/p/w500/"+pp;
   }
 }

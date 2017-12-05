@@ -19,7 +19,7 @@
         <img col-6 *ngIf="thumbnail===undefined" class="book-thumbnail" src="../assets/imgs/image-not-available.jpg"/>
         <div col-6>
           <h2>{{title}}</h2>
-          <p>{{author}}</p>
+          <p>{{genres}}</p>
           <button ion-button *ngIf="!favorited" round color="secondary" (click)="addTo('favorites')" icon-only><ion-icon name="star-outline"></ion-icon></button>
           <button ion-button *ngIf="favorited"  round color="secondary" (click)="deleteFrom('favorites')" icon-only><ion-icon name="star"></ion-icon></button>
           <button ion-button *ngIf="!toRead" round color="secondary" (click)="addTo('toRead')" icon-only><ion-icon name="list"></ion-icon></button>

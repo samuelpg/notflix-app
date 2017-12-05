@@ -4,6 +4,8 @@ import { LibProvider } from '../../providers/lib/lib';
 import { BookPage } from '../book/book';
 import { CategoryPage } from '../category/category';
 import { SearchPage } from '../search/search';
+import { DatabaseProvider } from '../../providers/database/database';
+import { LoginPage } from '../login/login';
 
 @Component({
   selector: 'page-home',
@@ -11,52 +13,67 @@ import { SearchPage } from '../search/search';
   providers: [LibProvider],
 })
 export class HomePage {
-  categories : Array<{title:string,icon:string}>;
-  randomTopics : Array<{title:string,icon:string}>;
+  categories : Array<{title:string,icon:string, query: string}>;
+  popular : Array<{title:string,icon:string, query: string}>;
+  randomTopics : Array<string>;
   randomTitle : string;
   randomIcon : string;
   randomBooks : Array<Object>;
-  constructor(public navCtrl: NavController, public libProvider: LibProvider) {
-    this.categories = [
-      {title:"Art", icon:"color-palette"},
-      {title:"Music", icon:"musical-notes"},
-      {title:"Food", icon:"pizza"},
-      {title:"Lifestyle", icon:"body"},
-      {title:"Ideas", icon:"bulb"},
-      {title:"Finance", icon:"cash"},
-      {title:"Computer Science", icon:"code"},
-      {title:"Science", icon:"flask"},
-      {title:"fiction", icon:"planet"}
+  name : string;
+  constructor(
+    public navCtrl: NavController, 
+    public libProvider: LibProvider,
+    public database : DatabaseProvider
+    ) {
+    this.database.currentSession('check').then(data=>{
+      if(data['status']){
+        this.name = data['username'];
+      }
+    })
+    this.popular = [
+      {title:"Popular", icon:"star",query:"/movie/popular"},
+      {title:"Top Rated", icon:"stats",query:"/movie/top_rated"},
+      {title:"On theatres", icon:"film",query:"/movie/now_playing"},
+      {title:"Upcoming", icon:"sunny",query:"/movie/upcoming"},
       ];
+    this.categories = [
+      {title:"Comedy",icon:"happy",query:"/genre/35/movies"},
+      {title:"Action",icon:"train",query:"/genre/28/movies"},
+      {title:"Horror",icon:"cloudy-night",query:"/genre/27/movies"},
+      {title:"Romance",icon:"heart",query:"/genre/10749/movies"},
+      {title:"Mistery",icon:"md-help",query:"/genre/9648/movies"},
+      {title:"Science Fiction",icon:"md-help",query:"/genre/878/movies"},
+      {title:"Documentary",icon:"videocam",query:"/genre/99/movies"},
+    ]
     this.randomTopics = [
-      {title:"Python",icon:"code"},
-      {title:"The Beatles",icon:"musical-notes"},
-      {title:"Macroeconomics",icon:"cash"},
-      {title:"Queen Elizabeth II",icon:"body"},
-      {title:"Comedy",icon:"body"},
-      {title:"Botany",icon:"body"},
-      {title:"Solar System",icon:"flask"},
-      {title:"Bob Ross",icon:"color-palette"},
-      {title:"Robotics",icon:"code"},
-      {title:"Creativity",icon:"bulb"},
-      {title:"Electronic Music",icon:"musical-notes"},
-      {title:"Pizza",icon:"pizza"},
-      {title:"Cupcakes",icon:"pizza"},
-      {title:"Star Wars",icon:"videocam"},
-      {title:"Piano",icon:"musical-notes"},
-      {title:"Silicon Valley",icon:"bulb"},
-      {title:"Video Games",icon:"game-controller-b"},
-      {title:"Dogs",icon:"body"},
-      {title:"Turing test",icon:"code"},
+      "Star Wars", 
+      "Get Out", 
+      "Les Miserable", 
+      "Doctor Strange", 
+      "Scream", 
+      "Mother", 
+      "Little Miss Sunshine",
+      "The Grinch",
+      "Finding Nemo",
+      "Matrix",
+      "The Room",
+      "The Breakfast Club",
+      "Grease",
+      "Beauty and the Beast",
+      "Moana",
+      "Xanadu",
+      "The Rocky Horror Picture Show",
+      "It",
+      "Insideous",
+      "10 things i hate about you",
+      "Operation Avalanche",
     ];
     this.getRandomTopic();
   }
   getRandomTopic(){
-    console.log("AAA");
-    let topic = this.randomTopics[Math.floor(Math.random()*this.randomTopics.length)];
-    this.randomTitle = topic.title;
-    this.randomIcon = topic.icon;
-    this.libProvider.getBooks(this.randomTitle,0,3).then(data=>{
+    this.randomTitle = this.randomTopics[Math.floor(Math.random()*this.randomTopics.length)];
+    console.log(this.randomTitle);
+    this.libProvider.getMovies(this.randomTitle,0,1).then(data=>{
       this.randomBooks = data['items'];
       console.log(this.randomBooks);
     }).catch(err=>{
@@ -67,11 +84,16 @@ export class HomePage {
     console.log(item)
     this.navCtrl.push(BookPage, item);
   }
-  goToCategory(cat:string){
+  goToCategory(cat:any){
     this.navCtrl.push(CategoryPage, {category:cat});
   }
   goToSearch(){
     console.log("BB")
     this.navCtrl.push(SearchPage);
+  }
+  logOut(){
+    this.database.currentSession('close').then(data=>{
+      this.navCtrl.setRoot( LoginPage );
+    })
   }
 }

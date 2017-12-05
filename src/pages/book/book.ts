@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { DatabaseProvider } from '../../providers/database/database';
+import { LibProvider } from '../../providers/lib/lib';
+import { LoadingController } from 'ionic-angular';
 /**
  * Generated class for the BookPage page.
  *
@@ -17,35 +19,37 @@ export class BookPage {
   title : string;
   thumbnail : string;
   description : string;
-  author : string;
+  genres = Array<string>();
   date : string;
   ISBN : string = "Not Available";
   pageCount : string = "Not Available";
   categories : string = "Not Available";
   previewLink : string;
   id : string;
-  data : Object;
+  data : any;
   favorited : boolean;
   toRead : boolean;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private database: DatabaseProvider) {
-    this.id = navParams.data['id'];
-    this.data = navParams.data;
-    let vf = navParams.data['volumeInfo'];
-    this.title = vf.title;
-    vf.imageLinks == null ? this.thumbnail= "../assets/imgs/image-not-available.jpg" :  this.thumbnail=vf.imageLinks.thumbnail;
-    this.description = vf.description;
-    this.author = vf.authors;
-    this.date = vf.publishedDate;
-    vf.industryIdentifiers == null ? this.ISBN="Not Available" : this.ISBN = vf.industryIdentifiers[0].identifier; 
-    vf.pageCount ? this.pageCount = vf.pageCount.toString():null;
-    vf.categories == null? this.categories = "Not Available" : this.categories = vf.categories;
-    this.previewLink = vf.previewLink;
-    this.database.checkIn('favorites',this.id).then(data=>{
-      this.favorited = data['bool'];
-    })
-    this.database.checkIn('toRead',this.id).then(data=>{
-      this.toRead = data['bool'];
+  constructor(
+    public navCtrl: NavController, 
+    public navParams: NavParams, 
+    private database: DatabaseProvider,
+    public lib : LibProvider,
+    public loadingCtrl:LoadingController
+    ) {
+    let loading = this.loadingCtrl.create({
+      content: "Getting more Movies!...",
+    });
+    this.lib.getMovie(navParams['data']['id']).then(data=>{
+      this.data = data;
+      this.title = this.data.title;
+      this.description = this.data.overview;
+      this.thumbnail = "https://image.tmdb.org/t/p/w500/" + this.data.poster_path;
+      this.genres = []
+      this.data.genres.forEach(genre => {
+        this.genres.push(genre.name);
+      });
+      loading.dismiss();
     })
   }
 
