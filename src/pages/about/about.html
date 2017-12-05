@@ -1,0 +1,26 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>
+      Favorites
+    </ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+    <div  *ngFor="let result of results">
+        <ion-card *ngIf="result!=null">
+            <ion-grid>
+                <ion-row>
+                  <img col-4 *ngIf="result.volumeInfo.imageLinks!==undefined" class="book-thumbnail" [src]="result.volumeInfo.imageLinks.thumbnail"/>
+                  <img col-4 *ngIf="result.volumeInfo.imageLinks===undefined" class="book-thumbnail" src="../assets/imgs/image-not-available.jpg"/>
+                  <div col-8>
+                    <h4>{{result.volumeInfo.title}}</h4>
+                    <p>{{result.volumeInfo.authors}}</p>
+                    <p>{{result.volumeInfo.publishedDate}}</p>
+                    <button ion-button round end outline (click)="seeMore(result)" (color)="primary">See More<ion-icon name="arrow-dropright"></ion-icon></button>
+                  </div>
+                </ion-row>
+              </ion-grid>
+        </ion-card>
+    </div>
+</ion-content>

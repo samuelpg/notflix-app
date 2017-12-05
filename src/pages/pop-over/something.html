@@ -1,0 +1,55 @@
+<ion-list radio-group [(ngModel)]="searchBy" (ionChange)="reload()">
+    <ion-list-header>
+       Search By:
+    </ion-list-header>
+    <ion-item>
+        <ion-label>Title</ion-label>
+        <ion-radio checked="true" value="title"></ion-radio>
+      </ion-item>
+    
+      <ion-item>
+        <ion-label>Author</ion-label>
+        <ion-radio value="inauthor"></ion-radio>
+      </ion-item>
+    
+      <ion-item>
+        <ion-label>Subject</ion-label>
+        <ion-radio value="subject"></ion-radio>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>Publisher</ion-label>
+        <ion-radio value="inpublisher"></ion-radio>
+      </ion-item>
+    </ion-list>
+</ion-list>
+<ion-list radio-group [(ngModel)]="filter" (ionChange)="reload()">
+    <ion-list-header>
+       Filter:
+    </ion-list-header>
+    <ion-item>
+        <ion-label>all</ion-label>
+        <ion-radio checked="true" value="all"></ion-radio>
+      </ion-item>
+    
+      <ion-item>
+        <ion-label>Partial Preview</ion-label>
+        <ion-radio value="partial"></ion-radio>
+      </ion-item>
+    
+      <ion-item>
+        <ion-label>Free Ebook</ion-label>
+        <ion-radio value="free-ebooks"></ion-radio>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>Paid Ebook</ion-label>
+        <ion-radio value="paid-ebooks"></ion-radio>
+      </ion-item>
+    
+      <ion-item>
+        <ion-label>Ebook</ion-label>
+        <ion-radio value="ebooks"></ion-radio>
+      </ion-item>
+    </ion-list>
+</ion-list>
