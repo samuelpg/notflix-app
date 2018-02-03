@@ -3,6 +3,7 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { RegisterPage } from '../register/register';
 import { DatabaseProvider } from '../../providers/database/database';
 import { TabsPage } from '../tabs/tabs';
+import { AlertController } from 'ionic-angular';
 /**
  * Generated class for the LoginPage page.
  *
@@ -24,6 +25,7 @@ export class LoginPage {
     public navCtrl: NavController, 
     public navParams: NavParams,
     public database: DatabaseProvider,
+    private alertCtrl: AlertController
   ) {
   }
 
@@ -40,7 +42,12 @@ export class LoginPage {
       if(data['status']){
         this.navCtrl.setRoot(TabsPage);
       }else{
-        console.log("BB")
+        let alert = this.alertCtrl.create({
+          title: 'Sorry',
+          subTitle: 'Incorrect username or password',
+          buttons: ['Dismiss']
+        });
+        alert.present();
       }
     })
   }

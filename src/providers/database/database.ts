@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Storage } from '@ionic/storage';
-import { resolveDefinition } from '@angular/core/src/view/util';
+/*import { resolveDefinition } from '@angular/core/src/view/util';*/
 /*
   Generated class for the DatabaseProvider provider.
 
@@ -16,53 +16,65 @@ export class DatabaseProvider {
   }
 
   add(key:string,value:any,database:string){
-    this.storage.set(key+database,{database:database,value:value}).then(data=>{
-      console.log("OK");
-    }).catch(err=>{
-      console.log(err);
+    this.currentSession('check').then(data=>{
+      let username = data['username']
+      console.log(key+database+username)
+      this.storage.set(key+database+username,{database:database,value:value, username:username}).then(data=>{
+        console.log("OK");
+      }).catch(err=>{
+        console.log(err);
+      })
     })
-    
   }
   delete(key:string,database:string){
-    this.storage.remove(key+database).then(data=>{
-      console.log("OK");
-    }).catch(err=>{
-      console.log(err);
+    this.currentSession('check').then(data=>{
+      let username = data['username'];
+      this.storage.remove(key+database+username).then(data=>{
+        console.log("OK");
+      }).catch(err=>{
+        console.log(err);
+      })
     })
   }
   getAll(database){
     return new Promise(resolve=>{
-      let data = new Array()
-      this.storage.forEach(values=>{
-        if(values.database==database){
-          data.push(values.value);
-        }
+      let movies = new Array()
+      this.currentSession('check').then(data=>{
+        let username = data['username']
+        this.storage.forEach(values=>{
+          if(values.database==database&&values.username==username){
+            movies.push(values.value);
+          }
+        })
       })
-      resolve({items:data});
+      resolve({results:movies});
     });
   }
 
   checkIn(database:string,id:string){
     return new Promise(resolve=>{
-      this.storage.get(id+database).then(data=>{
-        if(data.database == database){
-          resolve({bool:true})
-        }else{
-          resolve({bool:false})
-        }
-      }).catch(err=>{
-        
+      this.currentSession('check').then(data=>{
+        let username = data['username'];
+        console.log(username)
+        this.storage.get(id+database+username).then(data=>{
+          if(data.database == database){
+            resolve({bool:true})
+          }else{
+            resolve({bool:false})
+          }
+        }).catch(err=>{
+          console.log(err)
+        })
       })
     });
   }
-  registerUser(username:string, password:string, email: string){
+  registerUser(username:string, password:string){
     return new Promise(resolve=>{
       this.storage.get("user_"+username).then(data=>{
         if(data==null){
           let user = {
             username:username,
             password:password,
-            email:email,
           }
           this.storage.set("user_"+username, user).then(data=>{
             this.openSession(username);
@@ -80,10 +92,8 @@ export class DatabaseProvider {
   }
 
   login(username:string, password:string){
-    console.log("ASD")
     return new Promise(resolve=>{
       this.storage.get("user_"+username).then(data=>{
-        console.log(data)
         if(data!=null){
           if(data['password']==password){
             this.openSession(username);

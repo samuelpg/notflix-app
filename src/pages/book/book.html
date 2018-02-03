@@ -7,7 +7,10 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>{{title}}</ion-title>
+    <!-- <ion-title>{{title}}</ion-title> -->
+    <ion-title>
+      <img src="./assets/imgs/banner.png" style="height:25px; margin-top: 5px">
+    </ion-title>
   </ion-navbar>
 
 </ion-header>
@@ -20,6 +23,7 @@
         <div col-6>
           <h2>{{title}}</h2>
           <p>{{genres}}</p>
+          <p><ion-icon name="star"></ion-icon> {{rate}}</p>
           <button ion-button *ngIf="!favorited" round color="secondary" (click)="addTo('favorites')" icon-only><ion-icon name="star-outline"></ion-icon></button>
           <button ion-button *ngIf="favorited"  round color="secondary" (click)="deleteFrom('favorites')" icon-only><ion-icon name="star"></ion-icon></button>
           <button ion-button *ngIf="!toRead" round color="secondary" (click)="addTo('toRead')" icon-only><ion-icon name="list"></ion-icon></button>
@@ -34,23 +38,25 @@
             </ion-card-title>
             <p>{{description}}</p>
             <div style="text-align:center">
-              <button ion-button round color="secondary" (click)="openInBrowser(previewLink)"><ion-icon name="book"></ion-icon>Preview this book</button>                
+              <button ion-button *ngIf="previewLink" round color="secondary" (click)="openInBrowser(previewLink)"><ion-icon name="film"></ion-icon>Open on IMDB</button>         
+              <button ion-button *ngIf="youtubeKey" round color="secondary" (click)="openYoutube()"><ion-icon name="logo-youtube"></ion-icon>Watch Trailer</button>      
             </div>
             <ion-card-title>
-              <ion-icon name="information-circle"></ion-icon>Information about this book:
+              <ion-icon name="information-circle"></ion-icon>Information about this Movie:
             </ion-card-title>
             <p>
-              Number of Pages: {{pageCount}}
-            </p>
-            <p>
-              Categories: {{categories}}
+              Runtime: {{runtime}}
             </p>
             <p>
               Date of publishing: {{date}}
             </p>
-            <p>
-              ISBN: {{ISBN}}
-            </p>
           </ion-card-content>
       </ion-card>
+      <ion-fab right bottom>
+          <button ion-fab><ion-icon name="share-alt"></ion-icon></button>
+          <ion-fab-list side="top">
+            <button ion-fab (click)="shareWhatsapp()"><ion-icon name="logo-whatsapp"></ion-icon></button>
+            <button ion-fab (click)="shareTwitter()"><ion-icon name="logo-twitter"></ion-icon></button>
+          </ion-fab-list>
+        </ion-fab>
 </ion-content>

@@ -14,22 +14,18 @@
 
 
 <ion-content padding>
-  <img src="../assets/imgs/notflix.png"/>
+  <img src="./assets/imgs/notflix.png"/>
   <ion-card>
     <ion-item>
-      <ion-label floating>Username</ion-label>
-      <ion-input [(ngModel)]="username"></ion-input>
-    </ion-item>
-    <ion-item>
-      <ion-label floating>Email</ion-label>
-      <ion-input type="email" [(ngModel)]="email"></ion-input>
+      <ion-label floating >Username</ion-label>
+      <ion-input (ionChange)="check()" [(ngModel)]="username"></ion-input>
     </ion-item>
     <ion-item>
       <ion-label floating>Password</ion-label>
-      <ion-input type="password" [(ngModel)]="password"></ion-input>
+      <ion-input type="password" (ionChange)="check()" [(ngModel)]="password"></ion-input>
     </ion-item>
     <div padding>
-      <button ion-button full round (click)="register()">Register</button>
+      <button ion-button full round [disabled]="!checked" (click)="register()">Register</button>
     </div>
   </ion-card>
 </ion-content>

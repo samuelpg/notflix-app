@@ -15,10 +15,10 @@ export class LibProvider {
     console.log('Hello LibProvider Provider');
   }
 
-  getMovies(q:string,startIndex:number,maxResults:number){
+  searchMovies(q:string,startIndex:number){
     return new Promise(resolve=>{
       q = encodeURI(q);
-      this.http.get(this.apiUrl+q+"&startIndex="+startIndex+"&maxResults="+maxResults+this.apiKey).subscribe(data=>{
+      this.http.get(this.apiUrl+"/search/movie"+this.apiKey+"&language=en-US&page=1&include_adult=false&query="+q).subscribe(data=>{
         resolve(data);
       },err=>{
         console.log(err)
@@ -40,7 +40,7 @@ export class LibProvider {
 
   getMovie(id:string){
     return new Promise(resolve=>{
-      this.http.get(this.apiUrl+"/movie/"+id+this.apiKey).subscribe(data=>{
+      this.http.get(this.apiUrl+"/movie/"+id+this.apiKey+"&append_to_response=videos").subscribe(data=>{
         resolve(data);
       },err=>{
         console.log(err);

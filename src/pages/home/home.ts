@@ -6,6 +6,7 @@ import { CategoryPage } from '../category/category';
 import { SearchPage } from '../search/search';
 import { DatabaseProvider } from '../../providers/database/database';
 import { LoginPage } from '../login/login';
+import { App } from 'ionic-angular';
 
 @Component({
   selector: 'page-home',
@@ -19,11 +20,13 @@ export class HomePage {
   randomTitle : string;
   randomIcon : string;
   randomBooks : Array<Object>;
+  result : any;
   name : string;
   constructor(
     public navCtrl: NavController, 
     public libProvider: LibProvider,
-    public database : DatabaseProvider
+    public database : DatabaseProvider,
+    public app: App,
     ) {
     this.database.currentSession('check').then(data=>{
       if(data['status']){
@@ -42,7 +45,7 @@ export class HomePage {
       {title:"Horror",icon:"cloudy-night",query:"/genre/27/movies"},
       {title:"Romance",icon:"heart",query:"/genre/10749/movies"},
       {title:"Mistery",icon:"md-help",query:"/genre/9648/movies"},
-      {title:"Science Fiction",icon:"md-help",query:"/genre/878/movies"},
+      {title:"Science Fiction",icon:"flask",query:"/genre/878/movies"},
       {title:"Documentary",icon:"videocam",query:"/genre/99/movies"},
     ]
     this.randomTopics = [
@@ -73,16 +76,15 @@ export class HomePage {
   getRandomTopic(){
     this.randomTitle = this.randomTopics[Math.floor(Math.random()*this.randomTopics.length)];
     console.log(this.randomTitle);
-    this.libProvider.getMovies(this.randomTitle,0,1).then(data=>{
-      this.randomBooks = data['items'];
-      console.log(this.randomBooks);
+    this.libProvider.searchMovies(this.randomTitle,0).then(data=>{
+      this.result = data['results'][0];
     }).catch(err=>{
       console.log(err);
     })
   }
-  seeMore(item:Object){
-    console.log(item)
-    this.navCtrl.push(BookPage, item);
+  seeMore(id:string){
+    console.log(id)
+    this.navCtrl.push(BookPage,{id:id});
   }
   goToCategory(cat:any){
     this.navCtrl.push(CategoryPage, {category:cat});
@@ -93,7 +95,10 @@ export class HomePage {
   }
   logOut(){
     this.database.currentSession('close').then(data=>{
-      this.navCtrl.setRoot( LoginPage );
+      this.app.getRootNav().setRoot(LoginPage);
     })
+  }
+  posterPath(pp:string){
+    return "https://image.tmdb.org/t/p/w92/"+pp;
   }
 }

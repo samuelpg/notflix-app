@@ -20,6 +20,10 @@ import { SearchPage } from '../pages/search/search';
 import { DatabaseProvider } from '../providers/database/database';
 import { IonicStorageModule } from '@ionic/storage';
 import { SearchPopOver } from '../pages/pop-over/searchPopOver'; 
+import { ReminderModal } from '../pages/modal/modal';
+import { LocalNotifications } from '@ionic-native/local-notifications';
+import { SocialSharing } from '@ionic-native/social-sharing';
+import { YoutubeVideoPlayer } from '@ionic-native/youtube-video-player';
 
 @NgModule({
   declarations: [
@@ -33,7 +37,8 @@ import { SearchPopOver } from '../pages/pop-over/searchPopOver';
     SearchPage,
     SearchPopOver,
     RegisterPage,
-    LoginPage
+    LoginPage,
+    ReminderModal
   ],
   imports: [
     BrowserModule,
@@ -53,17 +58,18 @@ import { SearchPopOver } from '../pages/pop-over/searchPopOver';
     SearchPage,
     SearchPopOver,
     RegisterPage,
-    LoginPage
+    LoginPage,
+    ReminderModal,
   ],
   providers: [
     StatusBar,
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
-   /* HTTP,
-    HttpModule,*/
     LibProvider,
     DatabaseProvider,
-  /*  HTTP, */
+    LocalNotifications,
+    SocialSharing,
+    YoutubeVideoPlayer
   ]
 })
 export class AppModule {}

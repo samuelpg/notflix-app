@@ -51,6 +51,6 @@ export class CategoryPage {
     })
   }
   posterPath(pp:string){
-    return "https://image.tmdb.org/t/p/w500/"+pp;
+    return "https://image.tmdb.org/t/p/w92/"+pp;
   }
 }

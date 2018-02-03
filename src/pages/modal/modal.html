@@ -1,0 +1,28 @@
+<ion-header>
+    <ion-navbar color="primary">
+        <ion-title>
+            Create a reminder
+        </ion-title>
+      <ion-buttons end>
+            <button ion-button clear icon-only (click)="cancel()"><ion-icon name="close"></ion-icon></button>
+        </ion-buttons>
+    </ion-navbar>  
+</ion-header>
+
+<ion-content padding>
+    <ion-card padding>
+        <h3>Remember to watch {{movie}}!</h3>
+        <ion-item>
+            <ion-label><ion-icon name="calendar"></ion-icon> Date</ion-label>
+            <ion-datetime (ionChange)="check()" displayFormat="DD/MM/YYYY" (min)="today" max="2020-10-31" [(ngModel)]="myDate"></ion-datetime>
+        </ion-item>
+        <ion-item>
+            <ion-label><ion-icon name="alarm"></ion-icon> Time</ion-label>
+            <ion-datetime (ionChange)="check()" displayFormat="HH:mm" [(ngModel)]="myTime"></ion-datetime>
+        </ion-item>
+        <br>
+        <ion-row justify-content-center>
+            <button ion-button (click)="remindMe('new')" [disabled]="!checked" round color="secondary">Set reminder</button>
+        </ion-row>
+    </ion-card>
+</ion-content>

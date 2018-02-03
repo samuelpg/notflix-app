@@ -48,29 +48,36 @@ export class SearchPage {
     this.query = ev.target.value;
     this.results = null;
     this.startIndex = 0;
+    console.log(this.query)
     if(this.query){
       this.load(this.query)
     }
   }
   load(query:string){ 
-    this.q = " +"+this.searchBy+":"+query;
-    this.lib.getMovies(this.q.toLowerCase(),this.startIndex,10).then(data=>{
-      this.results = data['items'];
+    this.lib.searchMovies(query.toLowerCase(),this.startIndex).then(data=>{
+      this.results = data['results'];
+      console.log(this.results);
     }).catch(err=>{
       console.log(err);
     })
   }
-  seeMore(item:Object){
-    this.navCtrl.push(BookPage, item);
+  seeMore(id:string){
+    console.log(id)
+    this.navCtrl.push(BookPage,{id:id});
   }
   doInfinite(infiniteScroll){
-    this.startIndex = this.results.length;
-    this.lib.getMovies(this.q.toLowerCase(),this.startIndex,10).then(data=>{
-      this.results = this.results.concat(data['items']);
-      console.log(this.results);
-      infiniteScroll.complete();
-    }).catch(err=>{
-      console.log(err);
-    })
+    this.startIndex += 1;
+    if(this.q){
+      this.lib.searchMovies(this.q.toLowerCase(),this.startIndex).then(data=>{
+        this.results = this.results.concat(data['results']);
+        console.log(this.results);
+        infiniteScroll.complete();
+      }).catch(err=>{
+        console.log(err);
+      })
+    }
+  }
+  posterPath(pp:string){
+    return "https://image.tmdb.org/t/p/w92/"+pp;
   }
 }
